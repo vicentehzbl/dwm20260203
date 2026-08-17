@@ -121,13 +121,28 @@
         </div>
         
         <!-- Container -->
-        <div class="container-fluid bg-warning">
-            Hola Principal<br>
-            <a href="index.php">Ir a Principal</a><br>
-            <a href="empresa.php">Ir a Empresa</a><br>
-            <a href="productos.php">Ir a Productos</a><br>
-            <a href="servicios.php">Ir a Servicios</a><br>
-            <a href="contacto.php">Ir a Contacto</a><br>
+        <div class="container-fluid bg-dark text-white text-center py-4">
+            PRUEBA PRUEBA PRUEBA PRUEBA PRUEBA PRUEBA PRUEBA PRUEBA PRUEBA PRUEBA PRUEBA PRUEBA<br>
+            <a href="index.php">Ir a Principal</a>
+            <a href="empresa.php">Ir a Empresa</a>
+            <a href="productos.php">Ir a Productos</a>
+            <a href="servicios.php">Ir a Servicios</a>
+            <a href="contacto.php">Ir a Contacto</a>
+        </div>
+        <!-- Alertas -->
+        <div class="container-fluid">
+            <div class="alert alert-success mt-3">
+                <strong>Exito!</strong> Operación realizada con éxito.
+            </div>
+            <div class="alert alert-danger">
+                <strong>Error!</strong> Ocurrió un error en la operación.
+            </div>
+            <div class="alert alert-warning">
+                <strong>Advertencia!</strong> Operación realizada con advertencias.
+            </div>
+            <div class="alert alert-info">
+                <strong>Información!</strong> Información importante para el usuario.
+            </div>
         </div>
         <!-- Footer -->
         <div class="container-fluid bg-dark footer">
