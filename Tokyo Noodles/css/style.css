@@ -1,0 +1,105 @@
+/* Tokyo Noodles - estilos propios basados en el sketch y la paleta entregada */
+:root{
+    --periwinkle:#C9C9EE;
+    --lilac-ash:#BAABBD;
+    --dusty-mauve:#9F838C;
+    --taupe:#8D7471;
+    --dark-taupe:#816F68;
+    --ink:#241f21;
+    --cream:#f7f3f1;
+    --white:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:Arial, Helvetica, sans-serif;
+}
+.navbar{
+    background:var(--dark-taupe)!important;
+}
+.navbar-brand{
+    font-weight:800;
+    letter-spacing:2px;
+}
+.navbar .nav-link{color:#fff!important}
+.navbar .nav-link:hover{color:var(--periwinkle)!important}
+.btn-tokyo{
+    background:var(--periwinkle);
+    color:var(--ink);
+    border:1px solid var(--periwinkle);
+    font-weight:700;
+}
+.btn-tokyo:hover{background:var(--lilac-ash);color:#fff}
+.hero{
+    min-height:480px;
+    background:
+      linear-gradient(90deg,rgba(36,31,33,.82),rgba(36,31,33,.25)),
+      url("https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1600&q=85") center/cover;
+    display:flex;
+    align-items:center;
+}
+.hero-content{max-width:680px;color:#fff}
+.hero h1{font-size:clamp(2.6rem,6vw,5rem);font-weight:900;letter-spacing:-2px}
+.hero p{font-size:1.15rem}
+.section-title{font-weight:900}
+.info-strip{background:var(--lilac-ash);color:#fff}
+.info-item{padding:18px;text-align:center}
+.category-pill{
+    border:1px solid var(--dark-taupe);
+    color:var(--dark-taupe);
+    border-radius:50px;
+    padding:.55rem 1rem;
+    background:#fff;
+    cursor:pointer;
+}
+.category-pill.active,.category-pill:hover{background:var(--dark-taupe);color:#fff}
+.product-card{
+    border:0;
+    border-radius:18px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 8px 25px rgba(36,31,33,.10);
+    height:100%;
+    transition:transform .2s ease;
+}
+.product-card:hover{transform:translateY(-5px)}
+.product-img{
+    height:190px;
+    width:100%;
+    object-fit:cover;
+}
+.price{font-weight:900;color:var(--dark-taupe);font-size:1.2rem}
+.badge-tokyo{background:var(--periwinkle);color:var(--ink)}
+.review-card{
+    background:#fff;
+    border-left:5px solid var(--dusty-mauve);
+    border-radius:10px;
+}
+.video-box{
+    min-height:300px;
+    background:linear-gradient(135deg,var(--dark-taupe),var(--dusty-mauve));
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+}
+.video-play{
+    width:80px;height:80px;border-radius:50%;
+    border:2px solid #fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:2rem;
+}
+.contact-card{background:var(--lilac-ash);color:#fff;border-radius:18px}
+.footer{margin-top:auto;background:var(--dark-taupe);color:#fff}
+.footer a{color:var(--periwinkle);text-decoration:none}
+.form-control:focus{border-color:var(--dusty-mauve);box-shadow:0 0 0 .2rem rgba(159,131,140,.2)}
+.page-header{background:var(--lilac-ash);color:#fff;padding:70px 0}
+@media(max-width:576px){
+    .hero{min-height:430px}
+    .product-img{height:170px}
+}
