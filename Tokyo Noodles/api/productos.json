@@ -1,0 +1,56 @@
+
+{
+    "status": 200,
+    "message": "Productos obtenidos correctamente",
+    "data": [
+        {
+            "id": 1,
+            "nombre": "Tokyo Shoyu",
+            "categoria": "Ramen",
+            "descripcion": "Caldo de soya, cerdo chashu, huevo y cebollín.",
+            "precio": 8990,
+            "imagen": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+            "id": 2,
+            "nombre": "Miso Ramen",
+            "categoria": "Ramen",
+            "descripcion": "Miso, maíz, chashu, nori y cebollín fresco.",
+            "precio": 9490,
+            "imagen": "https://images.unsplash.com/photo-1557872943-16a5ac26437e?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+            "id": 3,
+            "nombre": "Tonkotsu",
+            "categoria": "Ramen",
+            "descripcion": "Caldo cremoso de cerdo, chashu, huevo y nori.",
+            "precio": 9990,
+            "imagen": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+            "id": 4,
+            "nombre": "Gyozas Clásicas",
+            "categoria": "Gyozas",
+            "descripcion": "Masa dorada rellena de cerdo, repollo y cebollín.",
+            "precio": 5490,
+            "imagen": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+            "id": 5,
+            "nombre": "Gyozas Vegetales",
+            "categoria": "Gyozas",
+            "descripcion": "Relleno de verduras, hongos y especias japonesas.",
+            "precio": 4990,
+            "imagen": "https://images.unsplash.com/photo-1625938144755-652e08e359b7?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+            "id": 6,
+            "nombre": "Combo Tokyo",
+            "categoria": "Combos",
+            "descripcion": "Ramen a elección + 5 gyozas + bebida.",
+            "precio": 12990,
+            "imagen": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80"
+        }
+    ]
+}
+

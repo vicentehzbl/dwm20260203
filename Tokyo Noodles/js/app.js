@@ -1,153 +1,330 @@
-// Tokyo Noodles - JavaScript construido a partir de las técnicas de Semana 3.
-// Se utiliza un objeto con estructura similar a una respuesta de API y se crean
-// elementos del DOM dinámicamente.
 
-const respuestaAPI = {
-    "status": 200,
-    "message": "Productos obtenidos correctamente",
-    "data": [
-        {"id":1,"nombre":"Tokyo Shoyu","categoria":"Ramen","descripcion":"Caldo de soya, cerdo chashu, huevo y cebollín.","precio":8990,"imagen":"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80"},
-        {"id":2,"nombre":"Miso Ramen","categoria":"Ramen","descripcion":"Miso, maíz, chashu, nori y cebollín fresco.","precio":9490,"imagen":"https://images.unsplash.com/photo-1557872943-16a5ac26437e?auto=format&fit=crop&w=800&q=80"},
-        {"id":3,"nombre":"Tonkotsu","categoria":"Ramen","descripcion":"Caldo cremoso de cerdo, chashu, huevo y nori.","precio":9990,"imagen":"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80"},
-        {"id":4,"nombre":"Gyozas Clásicas","categoria":"Gyozas","descripcion":"Masa dorada rellena de cerdo, repollo y cebollín.","precio":5490,"imagen":"https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=800&q=80"},
-        {"id":5,"nombre":"Gyozas Vegetales","categoria":"Gyozas","descripcion":"Relleno de verduras, hongos y especias japonesas.","precio":4990,"imagen":"https://images.unsplash.com/photo-1625938144755-652e08e359b7?auto=format&fit=crop&w=800&q=80"},
-        {"id":6,"nombre":"Combo Tokyo","categoria":"Combos","descripcion":"Ramen a elección + 5 gyozas + bebida.","precio":12990,"imagen":"https://images.unsplash.com/photo-1617622141573-2f00f1a3c58f?auto=format&fit=crop&w=800&q=80"}
-    ]
-};
-
-function formatoPrecio(precio){
+function formatoPrecio(precio) {
     return "$" + precio.toLocaleString("es-CL");
 }
 
-function crearProducto(producto){
-    let columna = document.createElement("div");
+function crearProducto(producto) {
+    const columna = document.createElement("div");
     columna.className = "col-sm-6 col-lg-4 mb-4";
 
-    let tarjeta = document.createElement("div");
+    const tarjeta = document.createElement("div");
     tarjeta.className = "product-card";
 
-    let imagen = document.createElement("img");
+    const imagen = document.createElement("img");
     imagen.setAttribute("src", producto.imagen);
     imagen.setAttribute("alt", producto.nombre);
     imagen.className = "product-img";
+
     tarjeta.appendChild(imagen);
 
-    let cuerpo = document.createElement("div");
+    const cuerpo = document.createElement("div");
     cuerpo.className = "p-4";
 
-    let categoria = document.createElement("span");
+    const categoria = document.createElement("span");
     categoria.className = "badge badge-tokyo mb-2";
     categoria.innerText = producto.categoria;
+
     cuerpo.appendChild(categoria);
 
-    let titulo = document.createElement("h3");
+    const titulo = document.createElement("h3");
     titulo.className = "h5 fw-bold";
     titulo.innerText = producto.nombre;
+
     cuerpo.appendChild(titulo);
 
-    let descripcion = document.createElement("p");
+    const descripcion = document.createElement("p");
     descripcion.className = "text-secondary";
     descripcion.innerText = producto.descripcion;
+
     cuerpo.appendChild(descripcion);
 
-    let precio = document.createElement("div");
+    const precio = document.createElement("div");
     precio.className = "price";
     precio.innerText = formatoPrecio(producto.precio);
+
     cuerpo.appendChild(precio);
+
+    const enlace = document.createElement("a");
+    enlace.className = "btn btn-tokyo mt-3";
+    enlace.innerText = "Ver producto";
+
+    const url = new URL("productos.php", window.location.href);
+    url.searchParams.set("productoId", producto.id);
+
+    enlace.href = url.href;
+
+    cuerpo.appendChild(enlace);
 
     tarjeta.appendChild(cuerpo);
     columna.appendChild(tarjeta);
+
     return columna;
 }
 
-function cargarProductos(filtro = "Todos"){
-    let contenedor = document.getElementById("contenedorProductos");
-    if(!contenedor){ return; }
+function crearDetalleProducto(producto) {
+    const contenedor = document.getElementById("contenedorProductos");
+
+    if (!contenedor) {
+        return;
+    }
 
     contenedor.innerHTML = "";
 
-    respuestaAPI.data.forEach((producto) => {
-        if(filtro === "Todos" || producto.categoria === filtro){
+    const columna = document.createElement("div");
+    columna.className = "col-12";
+
+    const detalle = document.createElement("div");
+    detalle.className = "product-detail";
+
+    const imagen = document.createElement("img");
+    imagen.src = producto.imagen;
+    imagen.alt = producto.nombre;
+    imagen.className = "product-detail-img";
+
+    const contenido = document.createElement("div");
+    contenido.className = "product-detail-content";
+
+    const categoria = document.createElement("span");
+    categoria.className = "badge badge-tokyo mb-3";
+    categoria.innerText = producto.categoria;
+
+    const titulo = document.createElement("h2");
+    titulo.className = "section-title";
+    titulo.innerText = producto.nombre;
+
+    const descripcion = document.createElement("p");
+    descripcion.className = "text-secondary fs-5";
+    descripcion.innerText = producto.descripcion;
+
+    const precio = document.createElement("div");
+    precio.className = "price mb-4";
+    precio.innerText = formatoPrecio(producto.precio);
+
+    const volver = document.createElement("a");
+    volver.className = "btn btn-outline-dark";
+    volver.href = "productos.php";
+    volver.innerText = "Volver al menú";
+
+    contenido.appendChild(categoria);
+    contenido.appendChild(titulo);
+    contenido.appendChild(descripcion);
+    contenido.appendChild(precio);
+    contenido.appendChild(volver);
+
+    detalle.appendChild(imagen);
+    detalle.appendChild(contenido);
+
+    columna.appendChild(detalle);
+    contenedor.appendChild(columna);
+}
+
+async function cargarProductos(filtro = "Todos") {
+    const contenedor = document.getElementById("contenedorProductos");
+
+    if (!contenedor) {
+        return;
+    }
+
+    const productos = await obtenerProductos();
+
+    contenedor.innerHTML = "";
+
+    productos.forEach(function(producto) {
+        if (filtro === "Todos" || producto.categoria === filtro) {
             contenedor.appendChild(crearProducto(producto));
         }
     });
 }
 
-function cargarCategorias(){
-    let contenedor = document.getElementById("categorias");
-    if(!contenedor){ return; }
+async function cargarCategorias() {
+    const contenedor = document.getElementById("categorias");
 
-    let categorias = ["Todos"];
-    respuestaAPI.data.forEach((producto) => {
-        if(!categorias.includes(producto.categoria)){
+    if (!contenedor) {
+        return;
+    }
+
+    const productos = await obtenerProductos();
+
+    contenedor.innerHTML = "";
+
+    const categorias = ["Todos"];
+
+    productos.forEach(function(producto) {
+        if (!categorias.includes(producto.categoria)) {
             categorias.push(producto.categoria);
         }
     });
 
-    categorias.forEach((categoria) => {
-        let boton = document.createElement("button");
-        boton.type = "button";
-        boton.className = "category-pill me-2 mb-2";
+    categorias.forEach(function(categoria) {
+        const boton = document.createElement("a");
+
+        boton.className =
+            "category-pill me-2 mb-2 d-inline-block text-decoration-none";
+
         boton.innerText = categoria;
 
-        boton.addEventListener("click", function(){
-            document.querySelectorAll(".category-pill").forEach((item) => item.classList.remove("active"));
-            boton.classList.add("active");
-            cargarProductos(categoria);
-        });
+        const url = new URL("productos.php", window.location.href);
+
+        if (categoria !== "Todos") {
+            url.searchParams.set("categoria", categoria);
+        }
+
+        boton.href = url.href;
 
         contenedor.appendChild(boton);
     });
 }
 
-function buscarProductos(){
-    let buscador = document.getElementById("txtBuscar");
-    let contenedor = document.getElementById("contenedorProductos");
-    if(!buscador || !contenedor){ return; }
+async function cargarBusquedaDesdeURL() {
+    const parametros = obtenerParametrosURL();
 
-    let texto = buscador.value.toLowerCase();
+    if (!parametros.busqueda) {
+        return false;
+    }
+
+    const buscador = document.getElementById("txtBuscar");
+    const contenedor = document.getElementById("contenedorProductos");
+
+    if (!contenedor) {
+        return false;
+    }
+
+    const texto = parametros.busqueda.toLowerCase().trim();
+
+    if (buscador) {
+        buscador.value = parametros.busqueda;
+    }
+
+    const productos = await obtenerProductos();
+
     contenedor.innerHTML = "";
 
-    respuestaAPI.data.forEach((producto) => {
-        if(producto.nombre.toLowerCase().includes(texto) ||
-           producto.categoria.toLowerCase().includes(texto)){
+    productos.forEach(function(producto) {
+        const nombre = producto.nombre.toLowerCase();
+        const categoria = producto.categoria.toLowerCase();
+
+        if (
+            nombre.includes(texto) ||
+            categoria.includes(texto)
+        ) {
             contenedor.appendChild(crearProducto(producto));
         }
     });
+
+    return true;
 }
 
-function enviarContacto(event){
-    event.preventDefault();
-    let nombre = document.getElementById("nombre").value;
-    let email = document.getElementById("email").value;
-    let mensaje = document.getElementById("mensaje").value;
-    let alerta = document.getElementById("alertaContacto");
+async function cargarProductoDesdeURL() {
+    const parametros = obtenerParametrosURL();
 
-    try{
-        if(nombre.trim() === "" || email.trim() === "" || mensaje.trim() === ""){
+    if (!parametros.productoId) {
+        return false;
+    }
+
+    const productos = await obtenerProductos();
+
+    const producto = productos.find(function(item) {
+        return String(item.id) === String(parametros.productoId);
+    });
+
+    if (!producto) {
+        const contenedor = document.getElementById("contenedorProductos");
+
+        if (contenedor) {
+            contenedor.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-warning">
+                        No encontramos el producto solicitado.
+                    </div>
+                </div>
+            `;
+        }
+
+        return true;
+    }
+
+    crearDetalleProducto(producto);
+
+    return true;
+}
+
+document.addEventListener("DOMContentLoaded", async function() {
+    const parametros = obtenerParametrosURL();
+
+    const contenedorProductos =
+        document.getElementById("contenedorProductos");
+
+    if (contenedorProductos) {
+
+        if (parametros.productoId) {
+            await cargarProductoDesdeURL();
+
+        } else {
+            await cargarCategorias();
+
+            if (parametros.busqueda) {
+                await cargarBusquedaDesdeURL();
+
+            } else if (parametros.categoria) {
+                await cargarProductos(parametros.categoria);
+
+            } else {
+                await cargarProductos();
+            }
+        }
+    }
+   
+    const buscador = document.getElementById("txtBuscar");
+
+    if (buscador) {
+        buscador.addEventListener("input", function() {
+            const texto = buscador.value.trim();
+
+            const url = new URL("productos.php", window.location.href);
+
+            if (texto !== "") {
+                url.searchParams.set("q", texto);
+            }
+
+            window.history.replaceState({}, "", url);
+
+            cargarBusquedaDesdeURL();
+        });
+    }
+
+    const formulario = document.getElementById("formContacto");
+
+    if (formulario) {
+        formulario.addEventListener("submit", enviarContacto);
+    }
+});
+
+function enviarContacto(event) {
+    event.preventDefault();
+
+    const nombre = document.getElementById("nombre").value;
+    const email = document.getElementById("email").value;
+    const mensaje = document.getElementById("mensaje").value;
+    const alerta = document.getElementById("alertaContacto");
+
+    try {
+        if (
+            nombre.trim() === "" ||
+            email.trim() === "" ||
+            mensaje.trim() === ""
+        ) {
             throw new Error("Completa todos los campos.");
         }
 
         alerta.className = "alert alert-success mt-3";
-        alerta.innerText = "¡Gracias " + nombre + "! Recibimos tu mensaje.";
+        alerta.innerText =
+            "¡Gracias " + nombre + "! Recibimos tu mensaje.";
+
         document.getElementById("formContacto").reset();
-    }catch(err){
+
+    } catch (error) {
         alerta.className = "alert alert-danger mt-3";
-        alerta.innerText = "Error: " + err.message;
+        alerta.innerText = "Error: " + error.message;
     }
 }
 
-document.addEventListener("DOMContentLoaded", function(){
-    cargarProductos();
-    cargarCategorias();
-
-    let buscador = document.getElementById("txtBuscar");
-    if(buscador){
-        buscador.addEventListener("input", buscarProductos);
-    }
-
-    let formulario = document.getElementById("formContacto");
-    if(formulario){
-        formulario.addEventListener("submit", enviarContacto);
-    }
-});
