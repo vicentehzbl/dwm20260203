@@ -1,0 +1,53 @@
+"""Estado operativo y líneas visibles del pedido que pertenece al cliente autenticado."""
+
+enum CatalogStatus {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+type CatalogProduct {
+  id: ID!
+  name: String!
+  category: String!
+  description: String!
+}
+
+type OrderLine {
+  productId: ID!
+  quantity: Int!
+  unitPrice: Int!
+  lineTotal: Int!
+  product: CatalogProduct
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+}
+
+type OrderLineConnection {
+  nodes: [OrderLine!]!
+  totalCount: Int!
+  pageInfo: PageInfo!
+}
+
+type OrderEvent {
+  status: String!
+  at: String!
+}
+
+type OrderSummary {
+  id: ID!
+  status: String!
+  fulfillment: String!
+  total: Int!
+  currency: String!
+  timeline: [OrderEvent!]!
+  catalogStatus: CatalogStatus
+  items(first: Int = 10, after: String): OrderLineConnection!
+}
+
+type Query {
+  """Devuelve el resumen si orderId pertenece a la sesión verificada."""
+  myOrderSummary(orderId: ID!): OrderSummary
+}

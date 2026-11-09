@@ -1,0 +1,149 @@
+classDiagram
+direction LR
+
+namespace BordePublico {
+  class ApiGateway {
+    +string gatewayId
+    +string listenAddress
+    +int requestTimeoutMs
+    +routeDefinitions RouteDefinition[]
+    +matchRoute(method,path) RouteDefinition
+    +authenticate(request) Identity
+    +authorize(identity,route,resource) Decision
+    +applyRateLimit(route,clientKey) Decision
+    +forward(route,request) Response
+    +writeSafeLog(requestId,routeId,status,duration)
+  }
+  class RouteDefinition {
+    +string routeId
+    +string externalPathPattern
+    +HttpMethod[] allowedMethods
+    +AccessClass accessClass
+    +string targetId
+    +int requestLimit
+    +int rateWindowMs
+    +string policyId
+    +matches(method,path) boolean
+  }
+  class AuthenticationPolicy {
+    +string policyId
+    +AuthMode mode
+    +string sessionCookieName
+    +string providerSignatureHeader
+    +authenticate(request) Identity
+  }
+  class AuthorizationPolicy {
+    +string policyId
+    +string requiredRole
+    +string resourceScope
+    +string condition
+    +authorize(identity,resource) Decision
+  }
+  class RateLimitPolicy {
+    +int maximumRequests
+    +Duration window
+    +string keyStrategy
+    +check(clientKey,routeId) Decision
+  }
+  class ServiceTarget {
+    +string targetId
+    +string subsystem
+    +string baseUrlReference
+    +string[] allowedInternalPaths
+    +HttpMethod[] allowedMethods
+    +Duration timeout
+    +call(path,method,identity) Response
+  }
+  class SecretProvider {
+    <<interface>>
+    +getSecret(reference) SecretValue
+    +rotate(reference)
+    +revoke(reference)
+  }
+  class EnvironmentSecretProvider {
+    +getSecret(reference) SecretValue
+  }
+  class VaultSecretProvider {
+    +vaultAddressReference string
+    +getSecret(reference) SecretValue
+  }
+  class AuthService {
+    +login(credentials) Session
+    +introspect(session) Identity
+    +revoke(session)
+  }
+}
+
+namespace RedPrivada {
+  class GraphQLGateway {
+    +string gatewayId
+    +string listenAddress
+    +Duration requestTimeout
+    +execute(operation,identity) GraphQLResponse
+    +authorizeField(identity,field,resource) Decision
+  }
+  class Schema {
+    +string version
+    +QueryDefinition[] queries
+    +MutationDefinition[] mutations
+    +validate(operation) ValidationResult
+  }
+  class Resolver {
+    +string fieldName
+    +string accessPolicy
+    +resolve(arguments,identity) Result
+  }
+  class SubsystemAdapter {
+    <<interface>>
+    +string subsystem
+    +execute(operation,arguments,identity) Result
+  }
+  class InventoryAdapter {
+    +queryCatalog(filter) ProductDTO[]
+    +queryAvailability(productIds) AvailabilityDTO[]
+  }
+  class OrdersAdapter {
+    +queryOwnOrder(orderId,identity) OrderDTO
+  }
+  class ClientsAdapter {
+    +introspect(session) Identity
+  }
+  class PaymentsAdapter {
+    +queryOwnPayment(paymentId,identity) PaymentDTO
+  }
+  class PrivateSubsystem {
+    <<boundary>>
+    +verifyServiceIdentity(credentials) Decision
+    +validateBusinessRules(command) Decision
+    +checkResourceOwnership(identity,resource) Decision
+  }
+}
+
+ApiGateway "1" *-- "1..*" RouteDefinition : define
+RouteDefinition "1..*" --> "1" AuthenticationPolicy : usa
+RouteDefinition "1..*" --> "1" AuthorizationPolicy : usa
+RouteDefinition "1..*" --> "1" RateLimitPolicy : usa
+RouteDefinition "0..*" --> "1" ServiceTarget : enruta a
+ApiGateway ..> AuthService : introspección de sesión
+ApiGateway ..> SecretProvider : credenciales técnicas
+ApiGateway ..> ServiceTarget : llamadas HTTP permitidas
+EnvironmentSecretProvider ..|> SecretProvider
+VaultSecretProvider ..|> SecretProvider
+
+GraphQLGateway "1" *-- "1" Schema : expone
+Schema "1" *-- "1..*" Resolver : define campos
+Resolver "1..*" --> "1" SubsystemAdapter : delega
+InventoryAdapter ..|> SubsystemAdapter
+OrdersAdapter ..|> SubsystemAdapter
+ClientsAdapter ..|> SubsystemAdapter
+PaymentsAdapter ..|> SubsystemAdapter
+GraphQLGateway ..> AuthService : identidad interna, si se habilita
+GraphQLGateway ..> SecretProvider : identidad de workload
+InventoryAdapter ..> PrivateSubsystem : adapta contrato interno
+OrdersAdapter ..> PrivateSubsystem : adapta contrato interno
+ClientsAdapter ..> PrivateSubsystem : adapta contrato interno
+PaymentsAdapter ..> PrivateSubsystem : adapta contrato interno
+
+note for ApiGateway "Borde externo REST: rutas explícitas, métodos permitidos, autenticación, autorización, rate limit y timeout. Nunca acepta destinos construidos libremente desde el cliente."
+note for GraphQLGateway "Solo red privada. No está desplegado: no existe consumidor/consulta agregada que justifique GraphQL en el caso actual. Si se habilita, autoriza operación, campo y recurso; POST /graphql no concede acceso general."
+note for SecretProvider "Estado local: variables de entorno fuera del repositorio. Evolución: Vault con política de mínimo privilegio; no usar Vault dev/root en producción."

@@ -1,0 +1,46 @@
+﻿{
+    "measurement":  {
+                        "scenario":  "M9: GraphQL own-order summary through public API Gateway",
+                        "startedAt":  "2026-11-09T19:52:38.285Z",
+                        "nodeVersion":  "v24.22.1",
+                        "requestsPlanned":  20,
+                        "requestsCompleted":  20,
+                        "concurrency":  4,
+                        "durationSeconds":  0.1611,
+                        "throughputRequestsPerSecond":  124.11,
+                        "latencyMs":  {
+                                          "min":  15.01,
+                                          "p50":  18.07,
+                                          "p95":  82.16,
+                                          "p99":  83.41,
+                                          "max":  83.41
+                                      },
+                        "requestBytesMean":  325,
+                        "requestBytesMax":  325,
+                        "responseBytesMean":  209,
+                        "httpStatusCounts":  {
+                                                 "200":  20
+                                             },
+                        "graphQLErrorRequests":  0,
+                        "otherErrorRequests":  0,
+                        "errorRate":  0,
+                        "orderId":  "ord_981a175c-021b-4c41-ae16-61609094291f"
+                    },
+    "machine":  {
+                    "os":  "Microsoft Windows NT 10.0.19045.0",
+                    "cpuModel":  "No disponible en este entorno",
+                    "logicalProcessors":  12,
+                    "physicalMemoryGB":  null
+                },
+    "backendResources":  {
+                             "backendNodeProcessCount":  7,
+                             "samplingDurationSeconds":  0.4721,
+                             "cpuSecondsDelta":  0.6406,
+                             "averageHostCpuPercentForBackendProcesses":  11.31,
+                             "initialSampledWorkingSetMB":  325.84,
+                             "peakSampledWorkingSetMB":  348.48,
+                             "peakWorkingSetGrowthMB":  22.64,
+                             "sampleIntervalMs":  10,
+                             "memorySampleCount":  3
+                         }
+}

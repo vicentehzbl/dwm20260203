@@ -1,0 +1,218 @@
+classDiagram
+direction LR
+
+class CatalogService {
+  <<service>>
+  +consultarCatalogo_S01(filtro) ProductoDTO[]
+  +consultarDetalle_S02(productId) ProductoDetalleDTO
+}
+class ClientAuthService {
+  <<service>>
+  +crearSesion_S03(LoginRequestDTO) SessionDTO
+}
+class ContactService {
+  <<service>>
+  +recibirMensaje_S04(MensajeContactoRequestDTO) MensajeContactoReceiptDTO
+}
+class InvoiceService {
+  <<service>>
+  +listarPropias_S05(limit,cursor) PaginaDocumentosDTO
+  +descargarPDF_S06(invoiceId) DocumentoPDF
+}
+class OrderService {
+  <<service>>
+  +crearPedido_S07(CrearPedidoRequestDTO) PedidoResumenDTO
+  +consultarPedidoPropio_S10(orderId) SeguimientoPedidoDTO
+}
+class PaymentService {
+  <<service>>
+  +iniciarPago_S08(orderId) CheckoutPagoDTO
+  +procesarEvento_S09(EventoPagoDTO,firma) ResultadoPagoDTO
+}
+class InventoryService {
+  <<service>>
+  +consultarStock_S11(filtro) InventarioItemDTO[]
+  +registrarAjuste_S12(productId,request) AjusteInventarioDTO
+}
+class OrderOperationsService {
+  <<service>>
+  +cambiarEstado_S13(orderId,request) PedidoEstadoDTO
+}
+
+class ProductoDTO {
+  +UUID id
+  +string nombre
+  +string categoria
+  +int precioCLP
+  +boolean disponible
+}
+class ProductoDetalleDTO {
+  +UUID id
+  +string nombre
+  +string descripcion
+  +int precioCLP
+}
+class LoginRequestDTO {
+  +string email
+  +string password
+}
+class SessionDTO {
+  +UUID id
+  +string nombre
+}
+class MensajeContactoRequestDTO {
+  +string nombre
+  +string email
+  +string mensaje
+}
+class MensajeContactoReceiptDTO {
+  +UUID id
+  +string estado
+}
+class PaginaDocumentosDTO {
+  +DocumentoResumenDTO[] items
+  +string nextCursor
+}
+class DocumentoPDF {
+  +bytes contenido
+  +string contentType
+}
+class CrearPedidoRequestDTO {
+  +LineaPedidoRequest[] items
+  +ModalidadEntrega modalidad
+  +TipoDocumento documento
+}
+class LineaPedidoRequest {
+  +UUID productId
+  +int quantity
+}
+class DatosDespachoRequestDTO {
+  +string calle
+  +string numero
+  +string comuna
+  +string region
+}
+class DatosFacturacionRequestDTO {
+  +string rutReceptor
+  +string razonSocial
+  +string giro
+  +string direccionTributaria
+}
+class PedidoResumenDTO {
+  +UUID id
+  +EstadoPedido estado
+  +string currency
+  +int subtotalCLP
+  +int deliveryFeeCLP
+  +int totalCLP
+}
+class SeguimientoPedidoDTO {
+  +UUID id
+  +EstadoPedido estado
+  +CambioEstadoDTO[] timeline
+}
+class CheckoutPagoDTO {
+  +UUID paymentId
+  +EstadoPago estado
+  +URI checkoutUrl
+}
+class ResultadoPagoDTO {
+  +boolean accepted
+  +EstadoPago status
+}
+class EventoPagoDTO {
+  +string eventId
+  +string paymentId
+  +EstadoPago estado
+}
+class InventarioItemDTO {
+  +UUID productId
+  +int onHand
+  +int reserved
+  +int available
+}
+class AjusteInventarioRequestDTO {
+  +int delta
+  +string reason
+}
+class AjusteInventarioDTO {
+  +UUID adjustmentId
+  +int onHandAfter
+  +Instant recordedAt
+}
+class CambioEstadoRequestDTO {
+  +EstadoPedido status
+  +string note
+}
+class PedidoEstadoDTO {
+  +UUID id
+  +EstadoPedido status
+  +Instant updatedAt
+}
+
+class Cliente
+class CredencialCliente
+class Personal
+class Producto
+class StockProducto
+class ReservaStock
+class AjusteInventario
+class MensajeContacto
+class DocumentoTributario
+class LineaDocumento
+class Pedido
+class DetallePedido
+class DatosDespacho
+class CambioEstadoPedido
+class IntentoPago
+class EventoPago
+
+CatalogService ..> ProductoDTO : devuelve
+CatalogService ..> ProductoDetalleDTO : devuelve
+ClientAuthService ..> LoginRequestDTO : recibe
+ClientAuthService ..> SessionDTO : devuelve
+ContactService ..> MensajeContactoRequestDTO : recibe
+ContactService ..> MensajeContactoReceiptDTO : devuelve
+InvoiceService ..> PaginaDocumentosDTO : devuelve
+InvoiceService ..> DocumentoPDF : transmite
+OrderService ..> CrearPedidoRequestDTO : recibe
+OrderService ..> PedidoResumenDTO : devuelve
+OrderService ..> SeguimientoPedidoDTO : devuelve
+PaymentService ..> CheckoutPagoDTO : devuelve
+PaymentService ..> EventoPagoDTO : recibe
+PaymentService ..> ResultadoPagoDTO : devuelve
+InventoryService ..> InventarioItemDTO : devuelve
+InventoryService ..> AjusteInventarioRequestDTO : recibe
+InventoryService ..> AjusteInventarioDTO : devuelve
+OrderOperationsService ..> CambioEstadoRequestDTO : recibe
+OrderOperationsService ..> PedidoEstadoDTO : devuelve
+
+CrearPedidoRequestDTO "1" *-- "1..*" LineaPedidoRequest : requiere lineas
+CrearPedidoRequestDTO "1" *-- "0..1" DatosDespachoRequestDTO : solo si delivery
+CrearPedidoRequestDTO "1" *-- "0..1" DatosFacturacionRequestDTO : solo si factura
+
+CatalogService ..> Producto : consulta
+CatalogService ..> StockProducto : consulta disponibilidad
+ClientAuthService ..> Cliente : autentica
+ClientAuthService ..> CredencialCliente : verifica
+ContactService ..> MensajeContacto : registra
+InvoiceService ..> Cliente : limita titular
+InvoiceService ..> DocumentoTributario : consulta
+InvoiceService ..> LineaDocumento : obtiene detalle
+OrderService ..> Cliente : identifica titular
+OrderService ..> Pedido : crea/consulta
+OrderService ..> DetallePedido : crea lineas
+OrderService ..> Producto : valida precio/estado
+OrderService ..> ReservaStock : reserva
+OrderService ..> DatosDespacho : registra destino
+PaymentService ..> Pedido : verifica estado/total
+PaymentService ..> IntentoPago : inicia
+PaymentService ..> EventoPago : deduplica/procesa
+InventoryService ..> Producto : consulta
+InventoryService ..> StockProducto : consulta/actualiza
+InventoryService ..> ReservaStock : calcula reservado
+InventoryService ..> AjusteInventario : registra
+InventoryService ..> Personal : verifica actor
+OrderOperationsService ..> Pedido : actualiza
+OrderOperationsService ..> CambioEstadoPedido : registra historial
+OrderOperationsService ..> Personal : verifica actor

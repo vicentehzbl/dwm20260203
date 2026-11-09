@@ -1,0 +1,29 @@
+sequenceDiagram
+  autonumber
+  actor Browser as Navegador
+  participant G as API Gateway REST
+  participant A as clients / Auth Service
+  participant V as SecretProvider
+  participant O as orders privado
+
+  Browser->>G: GET /api/v1/me/orders/{id} + cookie de sesión
+  G->>G: Busca RouteDefinition (S10, GET)
+  G->>G: Aplica límite y policy customer
+  G->>A: Introspección de sesión (identidad de servicio)
+  A-->>G: identidad customer válida
+  G->>V: Obtener credencial interna orders
+  V-->>G: Secreto/identidad de servicio
+  G->>O: GET interno con clientId verificado
+  O->>O: Comprueba titularidad y reglas del pedido
+  O-->>G: DTO mínimo del pedido propio
+  G-->>Browser: 200 respuesta sin datos internos
+
+  Browser->>G: DELETE /api/v1/products/1
+  G->>G: Ruta existe, método no está permitido
+  G-->>Browser: 405 Method Not Allowed + Allow: GET
+  Note over G,O: El Gateway no reenvía solicitudes denegadas. El servicio interno vuelve a validar identidad de servicio, propiedad y reglas de negocio.
+
+  Browser->>G: GET /api/v1/me/orders/{id} sin sesión
+  G->>A: Introspección
+  A-->>G: sesión ausente/inválida
+  G-->>Browser: 401; no se consulta orders

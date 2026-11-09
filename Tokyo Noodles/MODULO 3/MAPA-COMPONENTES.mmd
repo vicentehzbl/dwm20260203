@@ -1,0 +1,26 @@
+flowchart LR
+  Browser["Navegador / frontend"] -->|HTTPS, sesión| Gateway["API Gateway público"]
+  Gateway -->|token de servicio| Clients["clients privado\nperfil y sesiones"]
+  Gateway -->|token de servicio| Inventory["inventory privado\ncatálogo, stock y reservas"]
+  Gateway -->|token de servicio| Orders["orders privado\npedidos e historial"]
+  Gateway -->|token de servicio| Payments["payments privado\nintentos y eventos"]
+  Orders -->|reserva/libera stock| Inventory
+  Payments -->|resultado autenticado| Orders
+  Payments -->|checkout alojado| Provider["Proveedor de pago externo"]
+  Provider -->|webhook firmado| Gateway
+  Orders -->|estado operativo| Dispatch["Despacho interno\npersonal autorizado"]
+  Orders -->|evento posterior: pedido confirmado| Docs["Proveedor DTE autorizado\nexterno, no integrado"]
+  Gateway -->|solicitud de contacto| Messaging["Proveedor de mensajería\nexterno, no integrado"]
+
+  Clients --- CDB[("Datos clients\nJSON local")]
+  Inventory --- IDB[("Datos inventory\nJSON local")]
+  Orders --- ODB[("Datos orders\nJSON local")]
+  Payments --- PDB[("Datos payments\nJSON local")]
+
+  classDef public fill:#fce8d5,stroke:#b85c38,color:#28140e;
+  classDef private fill:#e6f4ea,stroke:#388e5a,color:#13251a;
+  classDef external fill:#e8e9f8,stroke:#555aa6,color:#171832;
+  class Gateway public;
+  class Clients,Inventory,Orders,Payments private;
+  class Dispatch private;
+  class Provider,Docs,Messaging external;

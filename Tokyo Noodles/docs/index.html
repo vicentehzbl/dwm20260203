@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Tokyo Noodles: ramen, gyozas y cocina japonesa cálida en Santiago.">
+    <meta name="theme-color" content="#29231f">
+    <title>Inicio | Tokyo Noodles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <!-- Permite saltar la navegación con el teclado. -->
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- Navegación compartida entre las páginas. -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" aria-label="Navegación principal">
+      <div class="container"><a class="navbar-brand" href="index.html" aria-label="Tokyo Noodles, inicio"><span class="brand-mark">東</span> TOKYO <span>NOODLES</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#siteNav" aria-controls="siteNav" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="siteNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link "  href="productos.html">Menú</a></li>
+            <li class="nav-item"><a class="nav-link" href="pedido.html">Pedido</a></li>
+            <li class="nav-item"><a class="nav-link "  href="empresa.html">Nosotros</a></li>
+            <li class="nav-item"><a class="nav-link "  href="facturas.html">Facturas</a></li>
+            <li class="nav-item"><a class="nav-link "  href="contacto.html">Contacto</a></li>
+            <li class="nav-item ms-lg-3"><a class="btn btn-cream btn-sm px-3" href="productos.html">Ver menú <span aria-hidden="true">↗</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Contenido principal de esta página. -->
+    <main id="contenido">
+      <!-- Portada de bienvenida. -->
+      <section class="hero">
+        <div class="container">
+          <div class="hero-copy"><span class="eyebrow">RAMEN · GYOZAS · SANTIAGO</span>
+            <h1>Calor de hogar.
+              <br><em>Sabor de Tokyo.</em></h1>
+            <p>Caldo cocido a fuego lento, noodles al dente y gyozas doradas. Encuentra tu nuevo favorito.</p>
+            <div class="d-flex flex-wrap gap-3"><a class="btn btn-coral btn-lg" href="productos.html">Explorar el menú <span aria-hidden="true">→</span></a><a class="btn btn-outline-light btn-lg" href="empresa.html">Conócenos</a></div>
+            <div class="hero-note"><span aria-hidden="true">✳</span> Preparado al momento, siempre.</div>
+          </div>
+        </div>
+      </section>
+      <!-- Promesas de cocina. -->
+      <section class="promise-strip">
+        <div class="container">
+          <div class="row g-3">
+            <div class="col-md-4"><span>01</span><strong>Caldo de larga cocción</strong></div>
+            <div class="col-md-4"><span>02</span><strong>Ingredientes frescos</strong></div>
+            <div class="col-md-4"><span>03</span><strong>Hecho para compartir</strong></div>
+          </div>
+        </div>
+      </section>
+      <section class="section-pad">
+        <div class="container">
+          <div class="section-top">
+            <div><span class="eyebrow text-coral">RECIÉN SALIDOS DE COCINA</span>
+              <h2>Favoritos de la casa</h2>
+            </div>
+            <a class="text-link" href="productos.html">Ver todo el menú <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="row g-4" id="featured-products" aria-live="polite"></div>
+        </div>
+      </section>
+      <!-- Historia breve. -->
+      <section class="story-band">
+        <div class="container">
+          <div class="story-inner"><span class="eyebrow">UNA MESA PARA TODOS</span>
+            <h2>Comer rico también
+              <br>es sentirse en casa.</h2>
+            <p>Ven por el ramen, quédate por el momento. En Tokyo Noodles servimos comida reconfortante con un toque japonés y espíritu de barrio.</p>
+            <a class="btn btn-cream" href="empresa.html">Nuestra historia <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+      <section class="section-pad">
+        <div class="container">
+          <!-- Acceso al menú. -->
+          <div class="cta-card">
+            <div><span class="eyebrow text-coral">¿ANTOJO DE ALGO CALIENTE?</span>
+              <h2>Tu próximo bowl
+                <br>te está esperando.</h2>
+            </div>
+            <a class="btn btn-dark btn-lg" href="productos.html">Elegir mi ramen <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Información del restaurante y enlaces comunes. -->
+    <footer class="site-footer">
+      <div class="container py-5">
+        <div class="row gy-4">
+          <div class="col-lg-5"><a class="footer-brand" href="index.html">TOKYO NOODLES</a>
+            <p class="footer-copy">Un bowl caliente, una mesa compartida y un pequeño viaje a Tokyo.</p>
+          </div>
+          <div class="col-6 col-lg-3">
+            <h2 class="footer-heading">Explora</h2>
+            <a href="productos.html">Menú</a><a href="empresa.html">Nuestra historia</a><a href="facturas.html">Facturas</a>
+          </div>
+          <div class="col-6 col-lg-4">
+            <h2 class="footer-heading">Encuéntranos</h2>
+            <p>Av. Providencia 2026, Santiago</p>
+            <p>Mar–Dom · 12:00–22:00</p>
+            <a href="mailto:hola@tokyonoodles.cl">hola@tokyonoodles.cl</a>
+          </div>
+        </div>
+        <div class="footer-bottom"><span>© 2026 Tokyo Noodles</span><span>Hecho con cariño en Santiago.</span></div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js" defer></script>
+  </body>
+</html>

@@ -1,330 +1,262 @@
+// Datos comunes y formato de moneda.
+const gatewayUrl = "api/gateway.json";
+const apiGateway = document.querySelector('meta[name="tn-gateway-url"]')?.content || "http://localhost:4000";
+const params = new URLSearchParams(window.location.search);
+const money = value => new Intl.NumberFormat("es-CL", {
+  style: "currency",
+  currency: "CLP",
+  maximumFractionDigits: 0
+}).format(value);
 
-function formatoPrecio(precio) {
-    return "$" + precio.toLocaleString("es-CL");
+async function getProducts() {
+  try {
+    const response = await fetch(`${apiGateway}/api/v1/products?available=true`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+    if (!Array.isArray(payload.items)) throw new Error("Respuesta de catálogo no válida");
+    return payload.items;
+  } catch (error) {
+    console.error("No fue posible cargar el catálogo:", error);
+    return [];
+  }
 }
 
-function crearProducto(producto) {
-    const columna = document.createElement("div");
-    columna.className = "col-sm-6 col-lg-4 mb-4";
-
-    const tarjeta = document.createElement("div");
-    tarjeta.className = "product-card";
-
-    const imagen = document.createElement("img");
-    imagen.setAttribute("src", producto.imagen);
-    imagen.setAttribute("alt", producto.nombre);
-    imagen.className = "product-img";
-
-    tarjeta.appendChild(imagen);
-
-    const cuerpo = document.createElement("div");
-    cuerpo.className = "p-4";
-
-    const categoria = document.createElement("span");
-    categoria.className = "badge badge-tokyo mb-2";
-    categoria.innerText = producto.categoria;
-
-    cuerpo.appendChild(categoria);
-
-    const titulo = document.createElement("h3");
-    titulo.className = "h5 fw-bold";
-    titulo.innerText = producto.nombre;
-
-    cuerpo.appendChild(titulo);
-
-    const descripcion = document.createElement("p");
-    descripcion.className = "text-secondary";
-    descripcion.innerText = producto.descripcion;
-
-    cuerpo.appendChild(descripcion);
-
-    const precio = document.createElement("div");
-    precio.className = "price";
-    precio.innerText = formatoPrecio(producto.precio);
-
-    cuerpo.appendChild(precio);
-
-    const enlace = document.createElement("a");
-    enlace.className = "btn btn-tokyo mt-3";
-    enlace.innerText = "Ver producto";
-
-    const url = new URL("productos.php", window.location.href);
-    url.searchParams.set("productoId", producto.id);
-
-    enlace.href = url.href;
-
-    cuerpo.appendChild(enlace);
-
-    tarjeta.appendChild(cuerpo);
-    columna.appendChild(tarjeta);
-
-    return columna;
+// Construye una tarjeta reutilizable para Inicio y Menú.
+function productCard(product) {
+  const col = document.createElement("div");
+  col.className = "col-sm-6 col-lg-4";
+  const href = new URL("detalle.html", window.location.href);
+  href.searchParams.set("productoId", product.id);
+  href.searchParams.set("categoria", product.categoria);
+  col.innerHTML = `
+    <article class="product-card">
+      <a href="${href.href}">
+        <img src="${product.imagen}" alt="${product.nombre}" loading="lazy">
+        <div class="product-card-body">
+          <span class="product-category">${product.categoria}</span>
+          <h3>${product.nombre}</h3>
+          <p>${product.descripcion}</p>
+          <span class="product-price">${money(product.precio)}</span>
+          <span class="card-cta">Ver detalle →</span>
+        </div>
+      </a>
+    </article>
+  `;
+  return col;
 }
 
-function crearDetalleProducto(producto) {
-    const contenedor = document.getElementById("contenedorProductos");
-
-    if (!contenedor) {
-        return;
-    }
-
-    contenedor.innerHTML = "";
-
-    const columna = document.createElement("div");
-    columna.className = "col-12";
-
-    const detalle = document.createElement("div");
-    detalle.className = "product-detail";
-
-    const imagen = document.createElement("img");
-    imagen.src = producto.imagen;
-    imagen.alt = producto.nombre;
-    imagen.className = "product-detail-img";
-
-    const contenido = document.createElement("div");
-    contenido.className = "product-detail-content";
-
-    const categoria = document.createElement("span");
-    categoria.className = "badge badge-tokyo mb-3";
-    categoria.innerText = producto.categoria;
-
-    const titulo = document.createElement("h2");
-    titulo.className = "section-title";
-    titulo.innerText = producto.nombre;
-
-    const descripcion = document.createElement("p");
-    descripcion.className = "text-secondary fs-5";
-    descripcion.innerText = producto.descripcion;
-
-    const precio = document.createElement("div");
-    precio.className = "price mb-4";
-    precio.innerText = formatoPrecio(producto.precio);
-
-    const volver = document.createElement("a");
-    volver.className = "btn btn-outline-dark";
-    volver.href = "productos.php";
-    volver.innerText = "Volver al menú";
-
-    contenido.appendChild(categoria);
-    contenido.appendChild(titulo);
-    contenido.appendChild(descripcion);
-    contenido.appendChild(precio);
-    contenido.appendChild(volver);
-
-    detalle.appendChild(imagen);
-    detalle.appendChild(contenido);
-
-    columna.appendChild(detalle);
-    contenedor.appendChild(columna);
+// Inicio: muestra una selección del catálogo.
+async function loadFeatured() {
+  const target = document.getElementById("featured-products");
+  if (!target) {
+    return;
+  }
+  const products = await getProducts();
+  products.slice(0, 3).forEach(product => target.append(productCard(product)));
+  if (!products.length) {
+    target.innerHTML = '<p class="text-secondary">No pudimos cargar el menú. Intenta recargar la página.</p>';
+  }
 }
 
-async function cargarProductos(filtro = "Todos") {
-    const contenedor = document.getElementById("contenedorProductos");
-
-    if (!contenedor) {
-        return;
-    }
-
-    const productos = await obtenerProductos();
-
-    contenedor.innerHTML = "";
-
-    productos.forEach(function(producto) {
-        if (filtro === "Todos" || producto.categoria === filtro) {
-            contenedor.appendChild(crearProducto(producto));
-        }
+// Menú: búsqueda y categorías se aplican sobre el catálogo.
+async function loadCatalog() {
+  const target = document.getElementById("product-list");
+  if (!target) {
+    return;
+  }
+  const products = await getProducts();
+  const categories = ["Todos", ...new Set(products.map(item => item.categoria))];
+  const chosen = params.get("categoria") || "Todos";
+  const categoryBox = document.getElementById("categories");
+  const searchBox = document.getElementById("product-search");
+  const status = document.getElementById("catalog-status");
+  let query = params.get("q") || "";
+  searchBox.value = query;
+  function render() {
+    const filtered = products.filter(item => {
+      const matchesCategory = chosen === "Todos" || item.categoria === chosen;
+      const searchableText = `${item.nombre} ${item.categoria} ${item.descripcion}`;
+      const matchesSearch = searchableText.toLocaleLowerCase("es").includes(query.toLocaleLowerCase("es"));
+      return matchesCategory && matchesSearch;
     });
+    target.replaceChildren(...filtered.map(productCard));
+    if (filtered.length === 0) {
+      status.textContent = "No encontramos productos con esa búsqueda.";
+      return;
+    }
+    const countLabel = filtered.length === 1 ? "opción disponible" : "opciones disponibles";
+    status.textContent = `${filtered.length} ${countLabel}`;
+  }
+  categories.forEach(category => {
+    const link = document.createElement("a");
+    link.className = `category-pill ${category === chosen ? "active" : ""}`;
+    link.href = category === "Todos"
+      ? "productos.html"
+      : `productos.html?categoria=${encodeURIComponent(category)}`;
+    link.setAttribute("aria-current", category === chosen ? "true" : "false");
+    link.textContent = category;
+    categoryBox.append(link);
+  });
+  searchBox.addEventListener("input", () => {
+    query = searchBox.value.trim();
+    render();
+  });
+  render();
 }
 
-async function cargarCategorias() {
-    const contenedor = document.getElementById("categorias");
-
-    if (!contenedor) {
-        return;
-    }
-
-    const productos = await obtenerProductos();
-
-    contenedor.innerHTML = "";
-
-    const categorias = ["Todos"];
-
-    productos.forEach(function(producto) {
-        if (!categorias.includes(producto.categoria)) {
-            categorias.push(producto.categoria);
-        }
-    });
-
-    categorias.forEach(function(categoria) {
-        const boton = document.createElement("a");
-
-        boton.className =
-            "category-pill me-2 mb-2 d-inline-block text-decoration-none";
-
-        boton.innerText = categoria;
-
-        const url = new URL("productos.php", window.location.href);
-
-        if (categoria !== "Todos") {
-            url.searchParams.set("categoria", categoria);
-        }
-
-        boton.href = url.href;
-
-        contenedor.appendChild(boton);
-    });
+// Detalle: productoId identifica el producto; categoria sirve para volver.
+async function loadDetail() {
+  const target = document.getElementById("product-detail");
+  if (!target) {
+    return;
+  }
+  const productId = params.get("productoId");
+  const category = params.get("categoria") || "Todos";
+  const back = category === "Todos"
+    ? "productos.html"
+    : `productos.html?categoria=${encodeURIComponent(category)}`;
+  const products = await getProducts();
+  const product = products.find(item => String(item.id) === String(productId));
+  if (!product) {
+    target.innerHTML = `
+      <div class="notice-box">
+        <p>No encontramos ese producto. <a class="back-link" href="${back}">Volver al menú</a></p>
+      </div>
+    `;
+    return;
+  }
+  target.innerHTML = `
+    <article class="detail-card">
+      <img src="${product.imagen}" alt="${product.nombre}">
+      <div class="detail-copy">
+        <span class="product-category">${product.categoria}</span>
+        <h2>${product.nombre}</h2>
+        <p>${product.descripcion}</p>
+        <p>Preparado al momento con ingredientes frescos y el cuidado de nuestra cocina.</p>
+        <div class="detail-price">${money(product.precio)}</div>
+        <a class="btn btn-coral btn-lg mb-4" href="contacto.html">
+          Consultar disponibilidad <span aria-hidden="true">→</span>
+        </a>
+        <a class="back-link" href="${back}">
+          ← Volver a ${category === "Todos" ? "todos los productos" : category}
+        </a>
+      </div>
+    </article>
+  `;
 }
 
-async function cargarBusquedaDesdeURL() {
-    const parametros = obtenerParametrosURL();
+// Facturas: datos de ejemplo y paginación local hasta conectar la API.
+function loadInvoices() {
+  const target = document.getElementById("invoice-list");
+  if (!target) {
+    return;
+  }
 
-    if (!parametros.busqueda) {
-        return false;
-    }
+  const invoices = [
+    { number: "DEMO-1042", date: "12 oct 2026", detail: "2 productos · Pedido en local", total: 14480 },
+    { number: "DEMO-1036", date: "08 oct 2026", detail: "1 producto · Pedido para llevar", total: 8990 },
+    { number: "DEMO-1021", date: "01 oct 2026", detail: "3 productos · Pedido en local", total: 23960 },
+    { number: "DEMO-0987", date: "28 sep 2026", detail: "3 productos · Pedido para llevar", total: 23960 },
+    { number: "DEMO-0962", date: "22 sep 2026", detail: "2 productos · Pedido en local", total: 15480 },
+    { number: "DEMO-0914", date: "15 sep 2026", detail: "1 producto · Pedido en local", total: 9990 },
+    { number: "DEMO-0888", date: "09 sep 2026", detail: "2 productos · Pedido para llevar", total: 14480 }
+  ];
+  const pageSize = 3;
+  let page = 1;
+  const pageStatus = document.getElementById("invoice-page-status");
+  const pagination = document.getElementById("invoice-pagination");
 
-    const buscador = document.getElementById("txtBuscar");
-    const contenedor = document.getElementById("contenedorProductos");
+  function renderPage() {
+    const pageCount = Math.ceil(invoices.length / pageSize);
+    const start = (page - 1) * pageSize;
+    const visibleInvoices = invoices.slice(start, start + pageSize);
 
-    if (!contenedor) {
-        return false;
-    }
+    target.innerHTML = visibleInvoices.map(invoice => `
+      <tr>
+        <td class="invoice-number">${invoice.number}<br><span class="invoice-status">Ejemplo</span></td>
+        <td>${invoice.date}</td>
+        <td>${invoice.detail}</td>
+        <td>${money(invoice.total)}</td>
+        <td><button type="button" class="invoice-download" disabled title="La descarga se habilitará al conectar el backend">Descargar PDF</button></td>
+      </tr>
+    `).join("");
 
-    const texto = parametros.busqueda.toLowerCase().trim();
+    pageStatus.textContent = `Mostrando ${start + 1}–${start + visibleInvoices.length} de ${invoices.length} facturas de ejemplo`;
+    pagination.innerHTML = `
+      <li class="page-item ${page === 1 ? "disabled" : ""}">
+        <button class="page-link" type="button" data-page="${page - 1}" ${page === 1 ? "disabled" : ""} aria-label="Página anterior">Anterior</button>
+      </li>
+      ${Array.from({ length: pageCount }, (_, index) => `
+        <li class="page-item ${page === index + 1 ? "active" : ""}">
+          <button class="page-link" type="button" data-page="${index + 1}" aria-current="${page === index + 1 ? "page" : "false"}">${index + 1}</button>
+        </li>
+      `).join("")}
+      <li class="page-item ${page === pageCount ? "disabled" : ""}">
+        <button class="page-link" type="button" data-page="${page + 1}" ${page === pageCount ? "disabled" : ""} aria-label="Página siguiente">Siguiente</button>
+      </li>
+    `;
 
-    if (buscador) {
-        buscador.value = parametros.busqueda;
-    }
-
-    const productos = await obtenerProductos();
-
-    contenedor.innerHTML = "";
-
-    productos.forEach(function(producto) {
-        const nombre = producto.nombre.toLowerCase();
-        const categoria = producto.categoria.toLowerCase();
-
-        if (
-            nombre.includes(texto) ||
-            categoria.includes(texto)
-        ) {
-            contenedor.appendChild(crearProducto(producto));
-        }
+    pagination.querySelectorAll("[data-page]").forEach(button => {
+      button.addEventListener("click", () => {
+        page = Number(button.dataset.page);
+        renderPage();
+      });
     });
+  }
 
-    return true;
+  renderPage();
+
+  const showDemo = document.getElementById("show-invoice-demo");
+  const demo = document.getElementById("invoice-demo");
+  showDemo?.addEventListener("click", () => {
+    demo.hidden = false;
+    showDemo.disabled = true;
+    showDemo.textContent = "Vista de ejemplo abierta";
+  });
 }
 
-async function cargarProductoDesdeURL() {
-    const parametros = obtenerParametrosURL();
+// Acceso de ejemplo: no transmite ni conserva las credenciales.
+function setupInvoiceLogin() {
+  const form = document.getElementById("invoice-login-form");
+  if (!form) {
+    return;
+  }
 
-    if (!parametros.productoId) {
-        return false;
-    }
-
-    const productos = await obtenerProductos();
-
-    const producto = productos.find(function(item) {
-        return String(item.id) === String(parametros.productoId);
-    });
-
-    if (!producto) {
-        const contenedor = document.getElementById("contenedorProductos");
-
-        if (contenedor) {
-            contenedor.innerHTML = `
-                <div class="col-12">
-                    <div class="alert alert-warning">
-                        No encontramos el producto solicitado.
-                    </div>
-                </div>
-            `;
-        }
-
-        return true;
-    }
-
-    crearDetalleProducto(producto);
-
-    return true;
-}
-
-document.addEventListener("DOMContentLoaded", async function() {
-    const parametros = obtenerParametrosURL();
-
-    const contenedorProductos =
-        document.getElementById("contenedorProductos");
-
-    if (contenedorProductos) {
-
-        if (parametros.productoId) {
-            await cargarProductoDesdeURL();
-
-        } else {
-            await cargarCategorias();
-
-            if (parametros.busqueda) {
-                await cargarBusquedaDesdeURL();
-
-            } else if (parametros.categoria) {
-                await cargarProductos(parametros.categoria);
-
-            } else {
-                await cargarProductos();
-            }
-        }
-    }
-   
-    const buscador = document.getElementById("txtBuscar");
-
-    if (buscador) {
-        buscador.addEventListener("input", function() {
-            const texto = buscador.value.trim();
-
-            const url = new URL("productos.php", window.location.href);
-
-            if (texto !== "") {
-                url.searchParams.set("q", texto);
-            }
-
-            window.history.replaceState({}, "", url);
-
-            cargarBusquedaDesdeURL();
-        });
-    }
-
-    const formulario = document.getElementById("formContacto");
-
-    if (formulario) {
-        formulario.addEventListener("submit", enviarContacto);
-    }
-});
-
-function enviarContacto(event) {
+  form.addEventListener("submit", async event => {
     event.preventDefault();
+    if (!form.reportValidity()) return;
 
-    const nombre = document.getElementById("nombre").value;
-    const email = document.getElementById("email").value;
-    const mensaje = document.getElementById("mensaje").value;
-    const alerta = document.getElementById("alertaContacto");
-
-    try {
-        if (
-            nombre.trim() === "" ||
-            email.trim() === "" ||
-            mensaje.trim() === ""
-        ) {
-            throw new Error("Completa todos los campos.");
-        }
-
-        alerta.className = "alert alert-success mt-3";
-        alerta.innerText =
-            "¡Gracias " + nombre + "! Recibimos tu mensaje.";
-
-        document.getElementById("formContacto").reset();
-
-    } catch (error) {
-        alerta.className = "alert alert-danger mt-3";
-        alerta.innerText = "Error: " + error.message;
-    }
+    document.getElementById("invoice-login-feedback").innerHTML = `
+      <div class="alert alert-info mt-2 mb-0" role="status">
+        El acceso aún no está conectado. No se enviaron ni guardaron tus credenciales.
+      </div>
+    `;
+    form.reset();
+  });
 }
 
+// Contacto: valida y persiste el mensaje a través del API Gateway.
+function setupContact() {
+  const form = document.getElementById("contact-form");
+  if (!form) {
+    return;
+  }
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    const feedback = document.getElementById("contact-feedback");
+    try {
+      const response = await fetch(`${apiGateway}/api/v1/contact-messages`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: document.getElementById("contact-name").value, email: document.getElementById("contact-email").value, message: document.getElementById("contact-message").value }) });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error?.message || "No se pudo enviar el mensaje.");
+      feedback.textContent = `Mensaje recibido (${payload.id}).`; form.reset();
+    } catch (error) { feedback.textContent = error.message; }
+  });
+}
+
+loadFeatured();
+loadCatalog();
+loadDetail();
+loadInvoices();
+setupInvoiceLogin();
+setupContact();

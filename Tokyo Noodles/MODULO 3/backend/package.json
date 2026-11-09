@@ -1,0 +1,22 @@
+{
+  "name": "tokyo-noodles-module-3-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend académico privado de Tokyo Noodles con API y GraphQL Gateway",
+  "type": "module",
+  "scripts": {
+    "start": "node dev.js",
+    "prepare:local": "node ../../M10/prepare-local.mjs",
+    "seed": "node ../../M10/seed-data.mjs",
+    "test:m7": "node ../../M7/validar-backend.mjs",
+    "test:m8": "node ../../M8/verificar-integracion.mjs",
+    "test:m9": "node ../../M9/prueba-carga.mjs",
+    "test:m10": "node ../../M10/verificar-integracion.mjs"
+  },
+  "dependencies": {
+    "graphql": "16.14.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

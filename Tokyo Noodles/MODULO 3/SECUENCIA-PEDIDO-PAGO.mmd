@@ -1,0 +1,42 @@
+sequenceDiagram
+  autonumber
+  actor C as Cliente
+  participant G as API Gateway
+  participant CL as clients
+  participant O as orders
+  participant I as inventory
+  participant P as payments
+  participant PSP as Proveedor de pago
+
+  C->>G: POST /api/v1/auth/sessions
+  G->>CL: validar credenciales
+  CL-->>G: identidad de cliente + sesión
+  G-->>C: cookie de sesión HttpOnly
+  C->>G: POST /api/v1/orders (items, entrega, documento)
+  G->>CL: verificar cookie
+  CL-->>G: clienteId autenticado
+  G->>O: crear pedido (Idempotency-Key, clienteId)
+  O->>I: reservar producto y cantidad
+  alt stock reservado
+    I-->>O: reservationId + expiración
+    O-->>G: pedido pending_payment + total del servidor
+    G-->>C: resumen del pedido
+    C->>G: POST /api/v1/orders/{id}/payments
+    G->>P: iniciar pago del pedido propio
+    P->>O: verificar estado y total oficial
+    O-->>P: importe y moneda
+    P->>PSP: crear checkout alojado
+    PSP-->>P: checkoutUrl + paymentId
+    P-->>G: checkoutUrl
+    G-->>C: redirección al proveedor
+    PSP->>G: webhook firmado (eventId, paymentId, status)
+    G->>P: verificar firma y procesar evento
+    P->>O: resultado autenticado, eventId deduplicable
+    O->>I: confirmar consumo de reserva
+    O-->>P: cambio de estado registrado
+    P-->>G: evento aceptado
+  else stock insuficiente o inventory no responde
+    I-->>O: rechazo / timeout
+    O-->>G: conflicto o dependencia no disponible
+    G-->>C: error recuperable; no confirmar el pedido
+  end

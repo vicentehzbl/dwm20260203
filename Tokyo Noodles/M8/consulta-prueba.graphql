@@ -1,0 +1,32 @@
+query M8Summary($orderId: ID!, $first: Int!, $after: String) {
+  myOrderSummary(orderId: $orderId) {
+    id
+    status
+    fulfillment
+    total
+    currency
+    catalogStatus
+    timeline {
+      status
+      at
+    }
+    items(first: $first, after: $after) {
+      nodes {
+        productId
+        quantity
+        unitPrice
+        lineTotal
+        product {
+          name
+          category
+          description
+        }
+      }
+      totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}

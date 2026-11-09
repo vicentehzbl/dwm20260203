@@ -1,0 +1,31 @@
+flowchart LR
+  B[Navegador / seguimiento.html]
+  G[API Gateway externo<br/>127.0.0.1:4000]
+  AUTH[Clients / Auth<br/>127.0.0.1:4103]
+  Q[GraphQL Gateway privado<br/>127.0.0.1:4200]
+  O[Orders privado<br/>127.0.0.1:4102]
+  I[Inventory privado<br/>127.0.0.1:4101]
+  P[Payments privado<br/>127.0.0.1:4104]
+  S[SecretProvider local<br/>referencias de entorno]
+  A[Analytics<br/>no se implementa]
+  H[Alta demanda<br/>no se implementa]
+
+  B -->|POST /api/v1/auth/sessions<br/>cookie HttpOnly| G
+  G -->|verifica sesión| AUTH
+  B -->|POST /api/v1/graphql<br/>cookie; sin token técnico| G
+  G -->|ruta fija; identidad verificada<br/>token Gateway → GraphQL| Q
+  Q -->|GET resumen; identidad titular<br/>token GraphQL → Orders| O
+  Q -->|POST catálogo batch<br/>token GraphQL → Inventory| I
+  G -.-> S
+  Q -.-> S
+  G -->|REST de pago autorizado| P
+  O -->|reserva/consulta explícita| I
+  A -. sin entrada pública .- G
+  H -. sin entrada pública .- I
+
+  classDef public fill:#fff1df,stroke:#ad571e,color:#24170e
+  classDef private fill:#e8f3f0,stroke:#1b7564,color:#102720
+  classDef future fill:#f3f0f8,stroke:#706080,color:#292331
+  class B,G public
+  class AUTH,Q,O,I,P,S private
+  class A,H future

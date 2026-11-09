@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Tokyo Noodles: ramen, gyozas y cocina japonesa cálida en Santiago.">
+    <meta name="theme-color" content="#29231f">
+    <meta name="tn-gateway-url" content="">
+    <title>Seguimiento | Tokyo Noodles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- Navegación compartida entre las páginas. -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" aria-label="Navegación principal">
+      <div class="container"><a class="navbar-brand" href="index.html" aria-label="Tokyo Noodles, inicio"><span class="brand-mark">東</span> TOKYO <span>NOODLES</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#siteNav" aria-controls="siteNav" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="siteNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item"><a class="nav-link "  href="index.html">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="productos.html">Menú</a></li>
+            <li class="nav-item"><a class="nav-link" href="pedido.html">Pedido</a></li>
+            <li class="nav-item"><a class="nav-link "  href="empresa.html">Nosotros</a></li>
+            <li class="nav-item"><a class="nav-link "  href="facturas.html">Facturas</a></li>
+            <li class="nav-item"><a class="nav-link "  href="contacto.html">Contacto</a></li>
+            <li class="nav-item ms-lg-3"><a class="btn btn-cream btn-sm px-3" href="productos.html">Ver menú <span aria-hidden="true">↗</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main id="contenido">
+      <section class="page-intro">
+        <div class="container">
+          <span class="eyebrow">TU PEDIDO</span>
+          <h1>Seguimiento</h1>
+          <p>Consulta los hitos de un pedido propio. El backend verifica la titularidad; el identificador por sí solo no da acceso.</p>
+        </div>
+      </section>
+      <section class="section-pad">
+        <div class="container">
+          <article class="workflow-card mx-auto" style="max-width:760px">
+            <div id="tracking-feedback" class="alert alert-info" role="status">Para usar el seguimiento, inicia el backend local y abre esta página con Live Server.</div>
+            <form id="tracking-login" class="row g-3">
+              <div class="col-12"><h2 class="h4">Iniciar sesión</h2><p class="text-muted">Usa la cuenta de cliente configurada en el backend de demostración.</p></div>
+              <div class="col-md-6"><label class="form-label" for="tracking-email">Correo</label><input class="form-control" id="tracking-email" name="email" type="email" autocomplete="username" required></div>
+              <div class="col-md-6"><label class="form-label" for="tracking-password">Contraseña</label><input class="form-control" id="tracking-password" name="password" type="password" autocomplete="current-password" required></div>
+              <div class="col-12"><button class="btn btn-coral" type="submit">Iniciar sesión</button></div>
+            </form>
+            <form id="tracking-query" class="row g-3 mt-3" hidden>
+              <div class="col-12"><p id="tracking-welcome" class="mb-0"></p></div>
+              <div class="col-md-8"><label class="form-label" for="tracking-order-id">Identificador del pedido</label><input class="form-control" id="tracking-order-id" name="orderId" autocomplete="off" maxlength="80" required></div>
+              <div class="col-md-4 d-flex align-items-end"><button class="btn btn-coral w-100" type="submit">Consultar</button></div>
+              <div class="col-12"><button id="tracking-logout" class="btn btn-link px-0" type="button">Cerrar sesión</button></div>
+            </form>
+            <section id="tracking-result" class="mt-4" aria-live="polite" hidden></section>
+          </article>
+        </div>
+      </section>
+    </main>
+    <!-- Información del restaurante y enlaces comunes. -->
+    <footer class="site-footer">
+      <div class="container py-5">
+        <div class="row gy-4">
+          <div class="col-lg-5"><a class="footer-brand" href="index.html">TOKYO NOODLES</a>
+            <p class="footer-copy">Un bowl caliente, una mesa compartida y un pequeño viaje a Tokyo.</p>
+          </div>
+          <div class="col-6 col-lg-3">
+            <h2 class="footer-heading">Explora</h2>
+            <a href="productos.html">Menú</a><a href="empresa.html">Nuestra historia</a><a href="facturas.html">Facturas</a>
+          </div>
+          <div class="col-6 col-lg-4">
+            <h2 class="footer-heading">Encuéntranos</h2>
+            <p>Av. Providencia 2026, Santiago</p>
+            <p>Mar–Dom · 12:00–22:00</p>
+            <a href="mailto:hola@tokyonoodles.cl">hola@tokyonoodles.cl</a>
+          </div>
+        </div>
+        <div class="footer-bottom"><span>© 2026 Tokyo Noodles</span><span>Hecho con cariño en Santiago.</span></div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/seguimiento.js" defer></script>
+  </body>
+</html>

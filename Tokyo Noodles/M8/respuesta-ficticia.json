@@ -1,0 +1,48 @@
+{
+  "data": {
+    "myOrderSummary": {
+      "id": "ord_demo_m8_1042",
+      "status": "preparing",
+      "fulfillment": "pickup",
+      "total": 14480,
+      "currency": "CLP",
+      "catalogStatus": "AVAILABLE",
+      "timeline": [
+        { "status": "pending_payment", "at": "2026-11-09T15:00:00.000Z" },
+        { "status": "confirmed", "at": "2026-11-09T15:02:00.000Z" },
+        { "status": "preparing", "at": "2026-11-09T15:04:00.000Z" }
+      ],
+      "items": {
+        "nodes": [
+          {
+            "productId": "1",
+            "quantity": 1,
+            "unitPrice": 8990,
+            "lineTotal": 8990,
+            "product": {
+              "name": "Tokyo Shoyu",
+              "category": "Ramen",
+              "description": "Caldo de soya, cerdo chashu, huevo y cebollín."
+            }
+          },
+          {
+            "productId": "4",
+            "quantity": 1,
+            "unitPrice": 5490,
+            "lineTotal": 5490,
+            "product": {
+              "name": "Gyozas Clásicas",
+              "category": "Gyozas",
+              "description": "Masa dorada rellena de cerdo, repollo y cebollín."
+            }
+          }
+        ],
+        "totalCount": 2,
+        "pageInfo": {
+          "endCursor": null,
+          "hasNextPage": false
+        }
+      }
+    }
+  }
+}

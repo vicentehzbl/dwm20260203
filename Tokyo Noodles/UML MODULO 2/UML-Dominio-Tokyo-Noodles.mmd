@@ -1,0 +1,144 @@
+classDiagram
+direction LR
+
+class Cliente {
+  +UUID clienteId
+  +string nombre
+  +string email
+  +EstadoCliente estado
+}
+class CredencialCliente {
+  +UUID credencialId
+  +string passwordHash
+  +Instant actualizadaEn
+  +boolean bloqueada
+}
+class Personal {
+  +UUID personalId
+  +string email
+  +RolPersonal rol
+  +boolean activo
+}
+class Producto {
+  +UUID productoId
+  +string nombre
+  +Categoria categoria
+  +string descripcion
+  +int precioActualCLP
+  +URI imagenUrl
+  +boolean activo
+}
+class StockProducto {
+  +UUID productoId
+  +int unidadesFisicas
+  +Instant actualizadoEn
+}
+class ReservaStock {
+  +UUID reservaId
+  +int cantidad
+  +EstadoReserva estado
+  +Instant venceEn
+}
+class AjusteInventario {
+  +UUID ajusteId
+  +int delta
+  +string motivo
+  +Instant registradoEn
+}
+class Pedido {
+  +UUID pedidoId
+  +EstadoPedido estado
+  +ModalidadEntrega modalidad
+  +string moneda
+  +int subtotalCLP
+  +int despachoCLP
+  +int totalCLP
+  +Instant creadoEn
+  +Instant pagoVenceEn
+}
+class DetallePedido {
+  +UUID detalleId
+  +UUID productoId
+  +string nombreProductoSnapshot
+  +int precioUnitarioSnapshotCLP
+  +int cantidad
+  +int totalLineaCLP
+}
+class DatosDespacho {
+  +string calle
+  +string numero
+  +string comuna
+  +string region
+  +int tarifaCLP
+  +Instant eta
+}
+class CambioEstadoPedido {
+  +UUID cambioId
+  +EstadoPedido estadoAnterior
+  +EstadoPedido estadoNuevo
+  +Instant ocurridoEn
+  +string nota
+}
+class IntentoPago {
+  +UUID intentoPagoId
+  +string proveedor
+  +string referenciaProveedor
+  +int montoCLP
+  +EstadoPago estado
+  +Instant creadoEn
+}
+class EventoPago {
+  +UUID eventoId
+  +string idEventoProveedor
+  +EstadoPago estadoInformado
+  +Instant ocurridoEn
+  +boolean firmaVerificada
+  +Instant procesadoEn
+}
+class DocumentoTributario {
+  +UUID documentoId
+  +TipoDocumento tipo
+  +string folio
+  +Instant emitidoEn
+  +EstadoDocumento estado
+  +int totalCLP
+  +string rutReceptor
+  +string razonSocial
+  +string giro
+  +string direccionTributaria
+  +string referenciaDocumento
+}
+class LineaDocumento {
+  +UUID lineaId
+  +string nombreSnapshot
+  +int cantidad
+  +int precioUnitarioCLP
+  +int totalLineaCLP
+}
+class MensajeContacto {
+  +UUID mensajeId
+  +string nombre
+  +string email
+  +string texto
+  +Instant recibidoEn
+  +EstadoContacto estado
+}
+
+Cliente "1" *-- "1" CredencialCliente : posee
+Cliente "1" --> "0..*" Pedido : realiza
+Pedido "1" *-- "1..*" DetallePedido : contiene
+Producto "1" --> "0..*" DetallePedido : producto historico
+Producto "1" *-- "1" StockProducto : controla
+StockProducto "1" *-- "0..*" ReservaStock : mantiene
+DetallePedido "1" --> "0..1" ReservaStock : reserva temporal
+StockProducto "1" *-- "0..*" AjusteInventario : registra
+Personal "1" --> "0..*" AjusteInventario : registra
+Pedido "1" *-- "0..1" DatosDespacho : destino si delivery
+Pedido "1" *-- "1..*" CambioEstadoPedido : historial
+Personal "0..1" --> "0..*" CambioEstadoPedido : actor si humano
+Pedido "1" --> "0..*" IntentoPago : permite reintentos
+IntentoPago "1" *-- "0..*" EventoPago : procesa eventos
+Pedido "1" --> "0..1" DocumentoTributario : emite
+Cliente "1" --> "0..*" DocumentoTributario : titular
+DocumentoTributario "1" *-- "1..*" LineaDocumento : conserva detalle
+Cliente "0..1" --> "0..*" MensajeContacto : puede enviar

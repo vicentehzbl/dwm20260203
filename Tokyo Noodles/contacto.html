@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Tokyo Noodles: ramen, gyozas y cocina japonesa cálida en Santiago.">
+    <meta name="theme-color" content="#29231f">
+    <title>Contacto | Tokyo Noodles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <!-- Permite saltar la navegación con el teclado. -->
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- Navegación compartida entre las páginas. -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" aria-label="Navegación principal">
+      <div class="container"><a class="navbar-brand" href="index.html" aria-label="Tokyo Noodles, inicio"><span class="brand-mark">東</span> TOKYO <span>NOODLES</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#siteNav" aria-controls="siteNav" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="siteNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item"><a class="nav-link "  href="index.html">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link "  href="productos.html">Menú</a></li>
+            <li class="nav-item"><a class="nav-link" href="pedido.html">Pedido</a></li>
+            <li class="nav-item"><a class="nav-link "  href="empresa.html">Nosotros</a></li>
+            <li class="nav-item"><a class="nav-link "  href="facturas.html">Facturas</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="contacto.html">Contacto</a></li>
+            <li class="nav-item ms-lg-3"><a class="btn btn-cream btn-sm px-3" href="productos.html">Ver menú <span aria-hidden="true">↗</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Contenido principal de esta página. -->
+    <main id="contenido">
+      <!-- Introducción al contacto. -->
+      <section class="page-intro">
+        <div class="container"><span class="eyebrow">HABLEMOS</span>
+          <h1>Estamos por aquí.</h1>
+          <p>¿Tienes una pregunta, una idea o simplemente quieres saludar?</p>
+        </div>
+      </section>
+      <section class="section-pad">
+        <div class="container">
+          <div class="row g-5">
+            <div class="col-lg-5"><span class="eyebrow text-coral">VEN A VISITARNOS</span>
+              <h2 class="display-heading">Una mesa
+                <br>te espera.</h2>
+              <div class="contact-details">
+                <p><span>Dirección</span>Av. Providencia 2026, Santiago</p>
+                <p><span>Horario</span>Martes a domingo · 12:00–22:00</p>
+                <p><span>Correo</span><a href="mailto:hola@tokyonoodles.cl">hola@tokyonoodles.cl</a></p>
+                <p><span>Teléfono</span><a href="tel:+56222026202">+56 2 2202 6202</a></p>
+              </div>
+            </div>
+            <div class="col-lg-7">
+              <!-- Formulario de contacto, validado localmente. -->
+              <form id="contact-form" class="contact-form">
+                <h2>Escríbenos</h2>
+                <p class="text-secondary">Completa el formulario y te responderemos pronto.</p>
+                <div class="mb-3"><label for="contact-name" class="form-label">Nombre</label>
+                  <input class="form-control" id="contact-name" name="nombre" autocomplete="name" required></div>
+                <div class="mb-3"><label for="contact-email" class="form-label">Correo electrónico</label>
+                  <input class="form-control" id="contact-email" name="email" type="email" autocomplete="email" required></div>
+                <div class="mb-3"><label for="contact-message" class="form-label">Mensaje</label><textarea class="form-control" id="contact-message" name="mensaje" rows="5" required></textarea></div>
+                <button class="btn btn-dark btn-lg" type="submit">Enviar mensaje <span aria-hidden="true">→</span></button>
+                <div id="contact-feedback" class="mt-3" aria-live="polite"></div>
+                <p class="form-note">Prototipo de interfaz: el mensaje se valida en el navegador, pero no se envía ni se almacena.</p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Información del restaurante y enlaces comunes. -->
+    <footer class="site-footer">
+      <div class="container py-5">
+        <div class="row gy-4">
+          <div class="col-lg-5"><a class="footer-brand" href="index.html">TOKYO NOODLES</a>
+            <p class="footer-copy">Un bowl caliente, una mesa compartida y un pequeño viaje a Tokyo.</p>
+          </div>
+          <div class="col-6 col-lg-3">
+            <h2 class="footer-heading">Explora</h2>
+            <a href="productos.html">Menú</a><a href="empresa.html">Nuestra historia</a><a href="facturas.html">Facturas</a>
+          </div>
+          <div class="col-6 col-lg-4">
+            <h2 class="footer-heading">Encuéntranos</h2>
+            <p>Av. Providencia 2026, Santiago</p>
+            <p>Mar–Dom · 12:00–22:00</p>
+            <a href="mailto:hola@tokyonoodles.cl">hola@tokyonoodles.cl</a>
+          </div>
+        </div>
+        <div class="footer-bottom"><span>© 2026 Tokyo Noodles</span><span>Hecho con cariño en Santiago.</span></div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js" defer></script>
+  </body>
+</html>

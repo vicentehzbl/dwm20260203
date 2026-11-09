@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Tokyo Noodles: ramen, gyozas y cocina japonesa cálida en Santiago.">
+    <meta name="theme-color" content="#29231f">
+    <title>Facturas | Tokyo Noodles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <!-- Permite saltar la navegación con el teclado. -->
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- Navegación compartida entre las páginas. -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" aria-label="Navegación principal">
+      <div class="container"><a class="navbar-brand" href="index.html" aria-label="Tokyo Noodles, inicio"><span class="brand-mark">東</span> TOKYO <span>NOODLES</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#siteNav" aria-controls="siteNav" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="siteNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item"><a class="nav-link "  href="index.html">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link "  href="productos.html">Menú</a></li>
+            <li class="nav-item"><a class="nav-link" href="pedido.html">Pedido</a></li>
+            <li class="nav-item"><a class="nav-link "  href="empresa.html">Nosotros</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="facturas.html">Facturas</a></li>
+            <li class="nav-item"><a class="nav-link "  href="contacto.html">Contacto</a></li>
+            <li class="nav-item ms-lg-3"><a class="btn btn-cream btn-sm px-3" href="productos.html">Ver menú <span aria-hidden="true">↗</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Contenido principal de esta página. -->
+    <main id="contenido">
+      <!-- Introducción al historial privado. -->
+      <section class="page-intro">
+        <div class="container">
+          <span class="eyebrow">TU HISTORIAL</span>
+          <h1>Facturas</h1>
+          <p>Consulta tus documentos de compra en un espacio privado.</p>
+        </div>
+      </section>
+      <section class="section-pad">
+        <div class="container">
+          <div class="notice-box">
+            <span aria-hidden="true">ⓘ</span>
+            <p><strong>Acceso protegido.</strong> Las facturas contienen información personal. Para ver documentos reales, el backend deberá autenticar al cliente y limitar los resultados a sus propias compras.</p>
+          </div>
+          <div class="invoice-gate mb-4">
+            <form id="invoice-login-form" class="invoice-login">
+              <div>
+                <h2>Inicia sesión para consultar tus facturas</h2>
+                <p>La autenticación se valida en el backend; tu sesión se conserva en una cookie HttpOnly.</p>
+              </div>
+              <div class="row g-2">
+                <div class="col-md-5">
+                  <label class="visually-hidden" for="invoice-email">Correo electrónico</label>
+                  <input class="form-control" id="invoice-email" name="email" type="email" autocomplete="email" placeholder="Correo electrónico" required>
+</div>
+                <div class="col-md-5">
+                  <label class="visually-hidden" for="invoice-password">Contraseña</label>
+                  <input class="form-control" id="invoice-password" name="password" type="password" autocomplete="current-password" placeholder="Contraseña" required>
+</div>
+                <div class="col-md-2 d-grid">
+                  <button class="btn btn-dark" type="submit">Ingresar</button>
+</div>
+              </div>
+              <div id="invoice-login-feedback" aria-live="polite"></div>
+            </form>
+          </div>
+          <!-- Tabla ficticia con paginación local. -->
+          <div id="invoice-demo" hidden>
+            <div class="alert alert-warning" role="status">Vista de demostración: los registros son ficticios. La sesión y los datos reales aún no están conectados.</div>
+            <div class="table-responsive invoice-wrap">
+              <table class="table align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Detalle</th>
+                    <th scope="col">Total</th>
+                    <th scope="col"><span class="visually-hidden">Acción</span></th>
+                  </tr>
+                </thead>
+                <tbody id="invoice-list"></tbody>
+              </table>
+            </div>
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mt-3">
+              <p id="invoice-page-status" class="small text-secondary mb-0" aria-live="polite"></p>
+              <nav aria-label="Páginas de facturas">
+                <ul class="pagination mb-0" id="invoice-pagination"></ul>
+              </nav>
+            </div>
+          </div>
+          <p class="small text-secondary mt-4">El servidor limita el historial a los documentos de la cuenta autenticada.</p>
+        </div>
+      </section>
+    </main>
+    <!-- Información del restaurante y enlaces comunes. -->
+    <footer class="site-footer">
+      <div class="container py-5">
+        <div class="row gy-4">
+          <div class="col-lg-5"><a class="footer-brand" href="index.html">TOKYO NOODLES</a>
+            <p class="footer-copy">Un bowl caliente, una mesa compartida y un pequeño viaje a Tokyo.</p>
+          </div>
+          <div class="col-6 col-lg-3">
+            <h2 class="footer-heading">Explora</h2>
+            <a href="productos.html">Menú</a><a href="empresa.html">Nuestra historia</a><a href="facturas.html">Facturas</a>
+          </div>
+          <div class="col-6 col-lg-4">
+            <h2 class="footer-heading">Encuéntranos</h2>
+            <p>Av. Providencia 2026, Santiago</p>
+            <p>Mar–Dom · 12:00–22:00</p>
+            <a href="mailto:hola@tokyonoodles.cl">hola@tokyonoodles.cl</a>
+          </div>
+        </div>
+        <div class="footer-bottom"><span>© 2026 Tokyo Noodles</span><span>Hecho con cariño en Santiago.</span></div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/invoices.js" defer></script>
+  </body>
+</html>
